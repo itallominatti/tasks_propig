@@ -11,6 +11,7 @@ from drf_yasg import openapi
 
 
 from src.django_project.user_app.views import UserViewSet
+from src.django_project.task_app.views import TaskViewSet
 from src.django_project.auth_app.views import AuthenticateUserView
 
 schema_view = get_schema_view(
@@ -25,6 +26,7 @@ schema_view = get_schema_view(
 
 router = DefaultRouter()
 router.register(prefix=r"api/users", viewset=UserViewSet, basename="users")
+router.register(prefix=r"api/tasks", viewset=TaskViewSet, basename="tasks")
 
 urlpatterns = [
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),

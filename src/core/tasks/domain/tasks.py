@@ -26,8 +26,6 @@ class Task(Entity):
     def validate(self):
         if not self.title:
             self.notification.add_error("Title cannot be empty.")
-        if not self.description:
-            self.notification.add_error("Description cannot be empty.")
         if self.completed_at and not self.completed:
             self.notification.add_error("Task cannot be completed without setting completed at date.")
         if self.completed and not self.completed_at:
