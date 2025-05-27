@@ -16,9 +16,16 @@ class DjangoOrmTaskRepository(TaskRepositoryInterface):
 
     def save(self, task: Task) -> Task:
         with transaction.atomic():
-            task_orm = TaskModelMapper.to_model(task)
+            try:
+                task_orm = self.task_model.objects.get(id=task.id)
+                task_orm.title = task.title
+                task_orm.description = task.description
+                task_orm.created_at = task.created_at
+                task_orm.updated_at = task.updated_at
+                task_orm.status = task.status
+            except self.task_model.DoesNotExist:
+                task_orm = TaskModelMapper.to_model(task)
             task_orm.save()
-            
             users_qs = DjangoUserModel.objects.filter(id__in=task.users)
             task_orm.users.set(users_qs)
             task_orm.save()
@@ -47,6 +54,7 @@ class DjangoOrmTaskRepository(TaskRepositoryInterface):
             task_model.title = task.title
             task_model.description = task.description
             task_model.updated_at = task.updated_at
+            task_model.status = task.status
             task_model.save()
             users_qs = DjangoUserModel.objects.filter(id__in=task.users)
             task_model.users.set(users_qs)
@@ -69,10 +77,12 @@ class TaskModelMapper:
             description=task.description,
             created_at=task.created_at,
             updated_at=task.updated_at,
+            status=task.status,
         )
 
     @staticmethod
     def to_entity(task_model: DjangoTaskModel) -> Task:
+        from src.core.tasks.domain.tasks import TaskStatus
         return Task(
             id=task_model.id,
             title=task_model.title,
@@ -80,4 +90,5 @@ class TaskModelMapper:
             created_at=task_model.created_at,
             updated_at=task_model.updated_at,
             users={user.id for user in task_model.users.all()},
+            status=TaskStatus(task_model.status) if not isinstance(task_model.status, TaskStatus) else task_model.status,
         )

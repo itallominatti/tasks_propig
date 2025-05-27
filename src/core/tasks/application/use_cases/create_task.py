@@ -73,6 +73,11 @@ class CreateTask:
                         "description": "string (optional)",
                         "users": "[UUID] (optional, default is yourself)"
                     }
+                },
+                "get": {
+                    "method": "GET",
+                    "href": f"/api/tasks/{task.id}",
+                    "description": "Get task details."
                 }
             }
         )

@@ -10,8 +10,15 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 
 
 from src.core.tasks.application.use_cases.create_task import CreateTask
-from src.core.tasks.application.exceptions import InvalidTaskData, RelatedUserNotFound, InvalidTaskBy
-from src.django_project.task_app.serializers import CreateTaskRequestSerializer, CreateTaskResponseSerializer, TaskListResponseSerializer
+from src.core.tasks.application.exceptions import InvalidTaskData, RelatedUserNotFound, InvalidTaskBy, TaskNotFound
+from src.django_project.task_app.serializers import CreateTaskRequestSerializer, CreateTaskResponseSerializer, TaskListResponseSerializer, TaskRetrieveResponseSerializer, TaskOutputSerializer, UpdateTaskRequestSerializer, DeleteTaskRequestSerializer
+from src.core.tasks.application.use_cases.update_task import UpdateTask
+from src.core.tasks.application.use_cases.get_task import GetTask
+from src.core.tasks.application.use_cases.delete_task import DeleteTask
+from src.core.tasks.application.use_cases.get_task import TaskOutput
+
+
+from src.core.tasks.domain.tasks import TaskStatus
 
 from src.core.tasks.application.use_cases.list_task import ListTask
 
@@ -86,19 +93,74 @@ class TaskViewSet(viewsets.ViewSet):
         """
         Retrieve a specific task by its ID.
         """
-        # Logic to retrieve a task by its ID
-        pass
+        use_case = GetTask(repository=DjangoOrmTaskRepository())
+        try:
+            response = use_case.execute(GetTask.GetTaskRequest(task_id=pk))
+        except (TaskNotFound) as err:
+            return Response({"error": str(err)}, status=status.HTTP_404_NOT_FOUND)
+        serializer = TaskOutputSerializer(instance=response.data)
+        data = serializer.data
+        data["links"] = response.data.links
+        return Response(data, status=status.HTTP_200_OK)
+        
 
     def update(self, request, pk=None):
         """
-        Update an existing task.
+        Update an existing task (PUT).
         """
-        # Logic to update a task by its ID
-        pass
+        serializer = UpdateTaskRequestSerializer(data={
+            "task_id": pk,
+            **request.data
+        })
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        if "status" in data and isinstance(data["status"], str):
+            data["status"] = TaskStatus(data["status"])
+        use_case = UpdateTask(repository=DjangoOrmTaskRepository())
+        try:
+            use_case.execute(
+                UpdateTask.UpdateTaskRequest(**data)
+            )
+        except (TaskNotFound, ValueError) as err:
+            return Response({"error": str(err)}, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def destroy(self, request, pk=None):
+    def patch(self, request, pk=None):
+        """
+        Partially update an existing task (PATCH).
+        """
+        serializer = UpdateTaskRequestSerializer(
+            data={"task_id": pk, **request.data}, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        if "status" in data and isinstance(data["status"], str):
+            data["status"] = TaskStatus(data["status"])
+        use_case = UpdateTask(repository=DjangoOrmTaskRepository())
+        try:
+            use_case.execute(
+                UpdateTask.UpdateTaskRequest(**data)
+            )
+        except (TaskNotFound, ValueError) as err:
+            return Response({"error": str(err)}, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def delete(self, request, pk=None):
         """
         Delete a specific task.
         """
-        # Logic to delete a task by its ID
-        pass
+        serializer = DeleteTaskRequestSerializer(
+            data={"id": pk}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        use_case = DeleteTask(repository=DjangoOrmTaskRepository())
+        try:
+            use_case.execute(
+                DeleteTask.DeleteTaskRequest(id=serializer.validated_data["id"])
+            )
+        except TaskNotFound as err:
+            return Response({"error": str(err)}, status=status.HTTP_404_NOT_FOUND)
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

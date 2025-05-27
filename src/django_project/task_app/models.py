@@ -13,6 +13,7 @@ class Task(models.Model):
     users = models.ManyToManyField(
         'user_app.User', related_name='tasks'
     )
+    status = models.CharField(max_length=50, default='pending')
 
     class Meta:
         db_table = "Task"

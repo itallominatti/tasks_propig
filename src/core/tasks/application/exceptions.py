@@ -6,3 +6,6 @@ class InvalidTaskData(Exception):
 
 class InvalidTaskBy(Exception):
     pass
+
+class TaskNotFound(Exception):
+    pass
