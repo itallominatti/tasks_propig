@@ -11,11 +11,13 @@ from src.adapters.hash.hash_adapter_interface import PasswordHasherInterface
 class TestCreateUser:
     def test_create_user_with_valid_data(self):
         mock_repository = MagicMock(UserRepositoryInterface)
+        mock_repository.get_by_email.return_value = None  # Ajuste aqui
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
+        mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
             repository=mock_repository,
             password_hasher=mock_password_hasher
-            )
+        )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="jhondoe@gmail.com",
@@ -30,11 +32,13 @@ class TestCreateUser:
 
     def test_create_user_with_invalid_email(self):
         mock_repository = MagicMock(UserRepositoryInterface)
+        mock_repository.get_by_email.return_value = None
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
+        mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
             repository=mock_repository,
             password_hasher=mock_password_hasher
-            )
+        )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="invalid-email",
@@ -49,11 +53,13 @@ class TestCreateUser:
 
     def test_create_user_with_invalid_password(self):
         mock_repository = MagicMock(UserRepositoryInterface)
+        mock_repository.get_by_email.return_value = None
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
+        mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
             repository=mock_repository,
             password_hasher=mock_password_hasher
-            )
+        )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="jhondoe@gmail.com",
@@ -66,11 +72,13 @@ class TestCreateUser:
 
     def test_create_user_with_empty_username(self):
         mock_repository = MagicMock(UserRepositoryInterface)
+        mock_repository.get_by_email.return_value = None
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
+        mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
             repository=mock_repository,
             password_hasher=mock_password_hasher
-            )
+        )
         request = CreateUser.CreateUserRequest(
             username="",
             email="jhondoe@gmail.com",
@@ -84,11 +92,13 @@ class TestCreateUser:
 
     def test_create_user_with_empty_email(self):
         mock_repository = MagicMock(UserRepositoryInterface)
+        mock_repository.get_by_email.return_value = None
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
+        mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
             repository=mock_repository,
             password_hasher=mock_password_hasher
-            )
+        )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="",
@@ -102,11 +112,13 @@ class TestCreateUser:
 
     def test_create_user_with_invalid_is_active(self):
         mock_repository = MagicMock(UserRepositoryInterface)
+        mock_repository.get_by_email.return_value = None
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
+        mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
             repository=mock_repository,
             password_hasher=mock_password_hasher
-            )
+        )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="jhondoe@gmail.com",
@@ -120,11 +132,13 @@ class TestCreateUser:
 
     def test_create_user_with_valid_is_active(self):
         mock_repository = MagicMock(UserRepositoryInterface)
+        mock_repository.get_by_email.return_value = None
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
+        mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
             repository=mock_repository,
             password_hasher=mock_password_hasher
-            )
+        )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="jhondoe@gmail.com",

@@ -10,4 +10,11 @@ class InMemoryUserRepository(UserRepositoryInterface):
     def save(self, user) -> None:
         """Save a user to the in-memory repository."""
         self.users.append(user)
+
+    def get_by_email(self, email: str) -> User | None:
+        """Get a user by email."""
+        for user in self.users:
+            if user.email == email:
+                return user
+        return None
     

@@ -6,3 +6,8 @@ class UserRepositoryInterface(ABC):
     def save(self, user) -> None:
         """Save a user to the repository."""
         pass
+
+    @abstractmethod
+    def get_by_email(self, email: str) -> 'User | None':
+        """Get a user by email."""
+        pass
