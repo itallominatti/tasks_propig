@@ -57,6 +57,7 @@ class User(Entity):
     def check_password(self, password: str, hasher: PasswordHasherInterface) -> bool:
         """Check if the provided password matches the user's hashed password."""
         return hasher.verify(password, self.password)
+    
 
     def activate(self) -> None:
         """Activate the user."""

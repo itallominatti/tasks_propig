@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "rest_framework",
     'drf_yasg',
     "src.django_project.user_app",
+    "src.django_project.auth_app",
 ]
 
 MIDDLEWARE = [

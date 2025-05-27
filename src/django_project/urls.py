@@ -11,6 +11,7 @@ from drf_yasg import openapi
 
 
 from src.django_project.user_app.views import UserViewSet
+from src.django_project.auth_app.views import AuthenticateUserView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -29,4 +30,5 @@ urlpatterns = [
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("admin/", admin.site.urls),
+    path('auth/login/', AuthenticateUserView.as_view(), name='auth-login'),
 ] + router.urls

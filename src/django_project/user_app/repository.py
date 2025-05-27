@@ -1,4 +1,5 @@
 from uuid import UUID
+from typing import Optional
 
 from src.core.user.domain.user import User
 from src.core.user.domain.user_repository_interface import UserRepositoryInterface
@@ -23,6 +24,14 @@ class DjangoORMUserRepository(UserRepositoryInterface):
             return UserModelMapper.to_entity(user_model)
         except self.user_model.DoesNotExist:
             return None
+    
+    def get_user_by_username(self, username: str) -> Optional[User]:
+        try:
+            user_model = self.user_model.objects.get(username=username)
+            return UserModelMapper.to_entity(user_model)
+        except self.user_model.DoesNotExist:
+            return None
+
         
     def list(self) -> list[User]:
         return [

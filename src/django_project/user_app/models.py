@@ -10,6 +10,11 @@ class User(models.Model):
 
     def __str__(self):
         return self.username
+    
+    @property
+    def is_authenticated(self):
+        """Check if the user is authenticated."""
+        return True
 
     class Meta:
         db_table = 'user'

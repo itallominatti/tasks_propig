@@ -17,6 +17,9 @@ class CreateUserRequestSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, required=True, min_length=8)
     is_active = serializers.BooleanField(default=True, required=False)
 
+class CreateUserResponseSerializer(serializers.Serializer):
+    id = serializers.UUIDField(read_only=True)
+
 class ListOutputMetaSerializer(serializers.Serializer):
     total_count = serializers.IntegerField()
     page_size = serializers.IntegerField()

@@ -1,25 +1,24 @@
 from abc import ABC, abstractmethod
+from typing import List, Optional
 from src.core.user.domain.user import User
-
 
 class UserRepositoryInterface(ABC):
     @abstractmethod
     def save(self, user) -> None:
-        """Save a user to the repository."""
         raise NotImplementedError
 
     @abstractmethod
-    def get_by_email(self, email: str) -> "User | None":
-        """Get a user by email."""
+    def get_by_email(self, email: str) -> Optional[User]:
         raise NotImplementedError
 
     @abstractmethod
-    def list(self) -> list[User]:
-        """Get a list of users."""
-        raise NotImplementedError
-    
-    @abstractmethod
-    def get_user_by_id(self, user_id: str) -> User | None:
-        """Get a user by their unique identifier."""
+    def list(self) -> List[User]:
         raise NotImplementedError
 
+    @abstractmethod
+    def get_user_by_id(self, user_id: str) -> Optional[User]:
+        raise NotImplementedError
+
+    def get_user_by_username(self, username: str) -> Optional[User]:
+        """Get a user by their username."""
+        raise NotImplementedError

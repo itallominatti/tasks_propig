@@ -43,12 +43,12 @@ class AuthenticateUser:
 
         expires_at = datetime.now(timezone.utc) + timedelta(minutes=self.token_exp_minutes)
         payload = {
-            "user_id": user.id,
+            "user_id": str(user.id),
             "exp": int(expires_at.timestamp())
         }
         token = self.jwt_adapter.encode(payload)
 
         return self.AuthenticateUserResponse(
             token=token,
-            expires_at=expires_at.isoformat()
+            expires_at=expires_at.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
         )
