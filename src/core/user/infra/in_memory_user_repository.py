@@ -21,3 +21,10 @@ class InMemoryUserRepository(UserRepositoryInterface):
     
     def list(self) -> list[User]:
         return [user for user in self.users]
+    
+    def get_user_by_id(self, user_id: str) -> User | None:
+        """Get a user by their unique identifier."""
+        for user in self.users:
+            if user.id == user_id:
+                return user
+        return None

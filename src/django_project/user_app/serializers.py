@@ -31,4 +31,13 @@ class ListOutputMetaSerializer(serializers.Serializer):
 class ListUserResponseSerializer(serializers.Serializer):
     data = UserResponseSerializer(many=True)
     meta = ListOutputMetaSerializer()
+
+class RetrieveUserResponseSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    email = serializers.EmailField()
+    is_active = serializers.BooleanField()
+    links = serializers.DictField(required=False)
+
+class RetrieveUserRequestSerializer(serializers.Serializer):
+    id = serializers.UUIDField(required=True)
     

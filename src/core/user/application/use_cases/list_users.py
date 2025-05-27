@@ -41,7 +41,6 @@ class ListUsers:
         if request.order_by not in ['username', 'email', 'id']:
             raise InvalidOrderBy(f"Invalid order_by field: {request.order_by}")
 
-        # Adiciona links HATEOAS para cada usuário
         sorted_users = sorted(
             [user for user in users if hasattr(user, request.order_by)],
             key=lambda x: getattr(x, request.order_by)

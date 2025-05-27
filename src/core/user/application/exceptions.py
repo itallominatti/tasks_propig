@@ -7,3 +7,6 @@ class UserAlreadyExists(Exception):
 
 class InvalidOrderBy(Exception):
     pass
+
+class UserNotFound(Exception):
+    pass

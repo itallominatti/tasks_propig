@@ -29,6 +29,14 @@ class DjangoORMUserRepository(UserRepositoryInterface):
             UserModelMapper.to_entity(user_model=user_model)
             for user_model in self.user_model.objects.all()
         ]
+    
+    def get_user_by_id(self, user_id: UUID) -> User | None:
+        """Get a user by their unique identifier."""
+        try:
+            user_model = self.user_model.objects.get(id=user_id)
+            return UserModelMapper.to_entity(user_model)
+        except self.user_model.DoesNotExist:
+            return None
         
 class UserModelMapper:
     @staticmethod
@@ -49,4 +57,5 @@ class UserModelMapper:
             email=user_model.email,
             password=user_model.password,
         )
+    
         

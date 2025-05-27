@@ -5,14 +5,18 @@ from rest_framework import status
 
 from src.adapters.hash.bcrypt_adapter import BcryptPasswordHasher
 
-from src.core.user.application.exceptions import UserAlreadyExists, InvalidUser
+from src.core.user.application.exceptions import UserAlreadyExists, InvalidUser, UserNotFound
 from src.core.user.application.use_cases.create_user import CreateUser
 from src.core.user.application.use_cases.list_users import ListUsers, InvalidOrderBy
+from src.core.user.application.use_cases.get_user import GetUser
 
 from src.django_project.user_app.repository import DjangoORMUserRepository
 from src.django_project.user_app.serializers import (
     CreateUserRequestSerializer,
     UserResponseSerializer,
+    RetrieveUserRequestSerializer,
+    UserResponseSerializer,
+    RetrieveUserResponseSerializer,
 )
 
 class UserViewSet(viewsets.ViewSet):
@@ -77,5 +81,31 @@ class UserViewSet(viewsets.ViewSet):
                 "meta": meta,
                 "links": response.links,
             },
+            status=status.HTTP_200_OK,
+        )
+    
+    @staticmethod
+    def retrieve(request: Request, pk=None) -> Response:
+        serializer = RetrieveUserRequestSerializer(data={"id": pk})
+        serializer.is_valid(raise_exception=True)
+
+        use_case = GetUser(
+            repository=DjangoORMUserRepository(),
+        )
+        try:
+            response = use_case.execute(
+                request=GetUser.GetUserRequest(
+                    id=serializer.validated_data["id"]
+                )
+            )
+        except (UserNotFound,InvalidUser) as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        response_serializer = RetrieveUserResponseSerializer(response)
+
+        return Response(
+            response_serializer.data,
             status=status.HTTP_200_OK,
         )

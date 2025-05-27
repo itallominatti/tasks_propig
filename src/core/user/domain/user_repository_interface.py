@@ -17,4 +17,9 @@ class UserRepositoryInterface(ABC):
     def list(self) -> list[User]:
         """Get a list of users."""
         raise NotImplementedError
+    
+    @abstractmethod
+    def get_user_by_id(self, user_id: str) -> User | None:
+        """Get a user by their unique identifier."""
+        raise NotImplementedError
 
