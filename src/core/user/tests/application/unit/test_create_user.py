@@ -12,7 +12,7 @@ from src.adapters.hash.hash_adapter_interface import PasswordHasherInterface
 class TestCreateUser:
     def test_create_user_with_valid_data(self):
         mock_repository = MagicMock(UserRepositoryInterface)
-        mock_repository.get_by_email.return_value = None  # Ajuste aqui
+        mock_repository.get_by_email.return_value = None
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(

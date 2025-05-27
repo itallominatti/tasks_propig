@@ -4,6 +4,8 @@ import re
 
 from src.core._shared.entity import Entity
 
+from src.adapters.hash.hash_adapter_interface import PasswordHasherInterface
+
 
 @dataclass
 class User(Entity):
@@ -51,6 +53,10 @@ class User(Entity):
 
         if self.notification.has_errors():
             raise ValueError(self.notification.messages)
+    
+    def check_password(self, password: str, hasher: PasswordHasherInterface) -> bool:
+        """Check if the provided password matches the user's hashed password."""
+        return hasher.verify(password, self.password)
 
     def activate(self) -> None:
         """Activate the user."""

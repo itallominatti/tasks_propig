@@ -66,9 +66,8 @@ class UserViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Serializa os usuários
         users_serializer = UserResponseSerializer(response.data, many=True)
-        # Serializa meta e links manualmente
+        
         meta = {
             "total_users": response.meta.total_users,
             "current_page": response.meta.current_page,
