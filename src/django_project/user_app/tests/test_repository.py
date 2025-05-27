@@ -8,7 +8,6 @@ from src.django_project.user_app.models import User as DjangoUserModel
 @pytest.mark.django_db
 class TestSave:
     def test_save_user_in_database(self):
-        # Arrange
         user = User(
             username="testuser",
             email="testuser@gmail.com",
