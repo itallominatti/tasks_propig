@@ -5,6 +5,7 @@ from uuid import UUID
 
 from src.core._shared.notification import Notification
 
+
 @dataclass(kw_only=True)
 class Entity(ABC):
     """Base class for all entities in the domain model."""

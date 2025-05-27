@@ -4,6 +4,7 @@ import re
 
 from src.core._shared.entity import Entity
 
+
 @dataclass
 class User(Entity):
     """User entity representing a user in the system."""
@@ -21,24 +22,36 @@ class User(Entity):
         """Validate the user entity."""
 
         if not self.username:
-            self.notification.add_error({"code": "username_required", "message": "Username is required."})
+            self.notification.add_error(
+                {"code": "username_required", "message": "Username is required."}
+            )
 
         if not self.email:
-            self.notification.add_error({"code": "email_required", "message": "Email is required."})
+            self.notification.add_error(
+                {"code": "email_required", "message": "Email is required."}
+            )
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", self.email):
-            self.notification.add_error({"code": "email_invalid", "message": "Email is invalid."})
+            self.notification.add_error(
+                {"code": "email_invalid", "message": "Email is invalid."}
+            )
 
         if not self.password:
-            self.notification.add_error({"code": "password_required", "message": "Password is required."})
-        
-        if not isinstance(self.is_active, bool):
-            self.notification.add_error({"code": "is_active_invalid", "message": "is_active must be a boolean value."})
+            self.notification.add_error(
+                {"code": "password_required", "message": "Password is required."}
+            )
 
+        if not isinstance(self.is_active, bool):
+            self.notification.add_error(
+                {
+                    "code": "is_active_invalid",
+                    "message": "is_active must be a boolean value.",
+                }
+            )
 
         if self.notification.has_errors():
             raise ValueError(self.notification.messages)
-        
+
     def activate(self) -> None:
         """Activate the user."""
         self.is_active = True
@@ -49,4 +62,8 @@ class User(Entity):
         self.is_active = False
         self.validate()
 
+    def __str__(self):
+        return f"User(id={self.id}, username={self.username}, email={self.email}, is_active={self.is_active})"
     
+    def __repr__(self):
+        return f"User(id={self.id}, username={self.username}, email={self.email}, is_active={self.is_active})"

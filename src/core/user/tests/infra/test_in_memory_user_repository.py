@@ -1,6 +1,7 @@
 from src.core.user.domain.user import User
 from src.core.user.infra.in_memory_user_repository import InMemoryUserRepository
 
+
 class TestInMemoryUserRepository:
     """Test suite for the InMemoryUserRepository."""
 

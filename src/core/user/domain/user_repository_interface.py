@@ -8,6 +8,6 @@ class UserRepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def get_by_email(self, email: str) -> 'User | None':
+    def get_by_email(self, email: str) -> "User | None":
         """Get a user by email."""
         pass

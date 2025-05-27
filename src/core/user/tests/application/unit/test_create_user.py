@@ -8,6 +8,7 @@ from src.core.user.application.exceptions import InvalidUser
 from src.core.user.domain.user_repository_interface import UserRepositoryInterface
 from src.adapters.hash.hash_adapter_interface import PasswordHasherInterface
 
+
 class TestCreateUser:
     def test_create_user_with_valid_data(self):
         mock_repository = MagicMock(UserRepositoryInterface)
@@ -15,13 +16,10 @@ class TestCreateUser:
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
-            repository=mock_repository,
-            password_hasher=mock_password_hasher
+            repository=mock_repository, password_hasher=mock_password_hasher
         )
         request = CreateUser.CreateUserRequest(
-            username="John Doe",
-            email="jhondoe@gmail.com",
-            password="securepassword123"
+            username="John Doe", email="jhondoe@gmail.com", password="securepassword123"
         )
         response = use_case.execute(request)
 
@@ -36,13 +34,10 @@ class TestCreateUser:
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
-            repository=mock_repository,
-            password_hasher=mock_password_hasher
+            repository=mock_repository, password_hasher=mock_password_hasher
         )
         request = CreateUser.CreateUserRequest(
-            username="John Doe",
-            email="invalid-email",
-            password="securepassword123"
+            username="John Doe", email="invalid-email", password="securepassword123"
         )
 
         with pytest.raises(InvalidUser) as exc_info:
@@ -57,17 +52,17 @@ class TestCreateUser:
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
-            repository=mock_repository,
-            password_hasher=mock_password_hasher
+            repository=mock_repository, password_hasher=mock_password_hasher
         )
         request = CreateUser.CreateUserRequest(
-            username="John Doe",
-            email="jhondoe@gmail.com",
-            password="short"
+            username="John Doe", email="jhondoe@gmail.com", password="short"
         )
         with pytest.raises(InvalidUser) as exc_info:
             use_case.execute(request)
-        assert "Password must be at least 8 characters long and contain both letters and numbers." in str(exc_info.value)
+        assert (
+            "Password must be at least 8 characters long and contain both letters and numbers."
+            in str(exc_info.value)
+        )
         assert not mock_repository.save.called
 
     def test_create_user_with_empty_username(self):
@@ -76,13 +71,10 @@ class TestCreateUser:
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
-            repository=mock_repository,
-            password_hasher=mock_password_hasher
+            repository=mock_repository, password_hasher=mock_password_hasher
         )
         request = CreateUser.CreateUserRequest(
-            username="",
-            email="jhondoe@gmail.com",
-            password="securepassword123"
+            username="", email="jhondoe@gmail.com", password="securepassword123"
         )
         with pytest.raises(InvalidUser) as exc_info:
             use_case.execute(request)
@@ -96,13 +88,10 @@ class TestCreateUser:
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
-            repository=mock_repository,
-            password_hasher=mock_password_hasher
+            repository=mock_repository, password_hasher=mock_password_hasher
         )
         request = CreateUser.CreateUserRequest(
-            username="John Doe",
-            email="",
-            password="securepassword123"
+            username="John Doe", email="", password="securepassword123"
         )
         with pytest.raises(InvalidUser) as exc_info:
             use_case.execute(request)
@@ -116,14 +105,13 @@ class TestCreateUser:
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
-            repository=mock_repository,
-            password_hasher=mock_password_hasher
+            repository=mock_repository, password_hasher=mock_password_hasher
         )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="jhondoe@gmail.com",
             password="securepassword123",
-            is_active="not_a_boolean"
+            is_active="not_a_boolean",
         )
         with pytest.raises(InvalidUser) as exc_info:
             use_case.execute(request)
@@ -136,14 +124,13 @@ class TestCreateUser:
         mock_password_hasher = MagicMock(spec=PasswordHasherInterface)
         mock_password_hasher.hash.return_value = "hashed_password"
         use_case = CreateUser(
-            repository=mock_repository,
-            password_hasher=mock_password_hasher
+            repository=mock_repository, password_hasher=mock_password_hasher
         )
         request = CreateUser.CreateUserRequest(
             username="John Doe",
             email="jhondoe@gmail.com",
             password="securepassword123",
-            is_active=True
+            is_active=True,
         )
         response = use_case.execute(request)
         assert response.id is not None

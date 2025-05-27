@@ -1,6 +1,7 @@
 from src.core.user.domain.user_repository_interface import UserRepositoryInterface
 from src.core.user.domain.user import User
 
+
 class InMemoryUserRepository(UserRepositoryInterface):
     """In-memory implementation of the UserRepositoryInterface."""
 
@@ -17,4 +18,3 @@ class InMemoryUserRepository(UserRepositoryInterface):
             if user.email == email:
                 return user
         return None
-    
