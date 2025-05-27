@@ -34,13 +34,6 @@ class TestUser:
             User(username="test", email="teste@gmail.com", password="")
         assert "password_required: Password is required." in str(exc_info.value)
 
-    def test_create_user_when_the_password_is_invalid(self):
-        with pytest.raises(
-            ValueError, match="password_invalid: Password must be at least 8 characters long and contain both letters and numbers."
-            ) as exc_info:
-            User(username="test", email="teste@gmail.com", password="1234567")
-        assert "password_invalid: Password must be at least 8 characters long and contain both letters and numbers." in str(exc_info.value)
-
     def test_create_user_when_is_active_is_not_a_boolean(self):
         with pytest.raises(
             ValueError, match="is_active_invalid: is_active must be a boolean value."

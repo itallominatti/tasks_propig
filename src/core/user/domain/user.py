@@ -31,9 +31,6 @@ class User(Entity):
 
         if not self.password:
             self.notification.add_error({"code": "password_required", "message": "Password is required."})
-
-        if not re.search(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', self.password):
-            self.notification.add_error({"code": "password_invalid", "message": "Password must be at least 8 characters long and contain both letters and numbers."})
         
         if not isinstance(self.is_active, bool):
             self.notification.add_error({"code": "is_active_invalid", "message": "is_active must be a boolean value."})
