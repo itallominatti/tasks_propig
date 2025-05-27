@@ -10,6 +10,7 @@ Tasks Propig é uma API RESTful desenvolvida em Python utilizando Django e Djang
 - [System Design e Arquitetura](#system-design-e-arquitetura)
 - [Como baixar e rodar o projeto](#como-baixar-e-rodar-o-projeto)
 - [Principais Endpoints](#principais-endpoints)
+- [Exemplos de uso com cURL](#exemplos-de-uso-com-curl)
 - [Rodando os testes](#rodando-os-testes)
 - [Estrutura de Pastas](#estrutura-de-pastas)
 - [Contribuindo](#contribuindo)
@@ -103,6 +104,60 @@ Tasks Propig oferece endpoints para cadastro, autenticação e gerenciamento de 
 - `DELETE /api/tasks/{id}/` — Remover task
 
 Consulte a documentação Swagger em `/swagger/` para detalhes completos.
+
+---
+
+## Exemplos de uso com cURL
+
+### Cadastro de usuário
+
+```sh
+curl -X POST http://localhost:8000/api/users/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "usuario", "password": "securepassword123", "email": "usuario@gmail.com"}'
+```
+
+### Autenticação (obter JWT)
+
+```sh
+curl -X POST http://localhost:8000/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "usuario", "password": "securepassword123"}'
+```
+
+A resposta conterá um campo `token` com o token JWT. Guarde esse token para autenticar as próximas requisições.
+
+### Listar tasks do usuário
+
+```sh
+curl -X GET http://localhost:8000/api/tasks/ \
+  -H "Authorization: Bearer SEU_TOKEN_JWT"
+```
+
+### Criar nova task
+
+```sh
+curl -X POST http://localhost:8000/api/tasks/ \
+  -H "Authorization: Bearer SEU_TOKEN_JWT" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Minha nova task", "description": "Descrição opcional"}'
+```
+
+### Atualizar uma task
+
+```sh
+curl -X PUT http://localhost:8000/api/tasks/1/ \
+  -H "Authorization: Bearer SEU_TOKEN_JWT" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Título atualizado", "description": "Nova descrição"}'
+```
+
+### Remover uma task
+
+```sh
+curl -X DELETE http://localhost:8000/api/tasks/1/ \
+  -H "Authorization: Bearer SEU_TOKEN_JWT"
+```
 
 ---
 
