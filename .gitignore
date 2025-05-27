@@ -35,3 +35,7 @@ Thumbs.db
 # dotenv
 .env
 .env.*
+
+# Poetry/Pipenv lock files
+poetry.lock
+Pipfile.lock
