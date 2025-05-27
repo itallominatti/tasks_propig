@@ -18,3 +18,6 @@ class InMemoryUserRepository(UserRepositoryInterface):
             if user.email == email:
                 return user
         return None
+    
+    def list(self) -> list[User]:
+        return [user for user in self.users]

@@ -7,6 +7,7 @@ from src.adapters.hash.bcrypt_adapter import BcryptPasswordHasher
 
 from src.core.user.application.exceptions import UserAlreadyExists, InvalidUser
 from src.core.user.application.use_cases.create_user import CreateUser
+from src.core.user.application.use_cases.list_users import ListUsers, InvalidOrderBy
 
 from src.django_project.user_app.repository import DjangoORMUserRepository
 from src.django_project.user_app.serializers import (
@@ -42,4 +43,39 @@ class UserViewSet(viewsets.ViewSet):
         return Response(
             response_serializer.data,
             status=status.HTTP_201_CREATED,
+        )
+    
+    @staticmethod
+    def list(request: Request) -> Response:
+        use_case = ListUsers(repository=DjangoORMUserRepository())
+        request_data = {
+            "order_by": request.query_params.get("order_by", "username"),
+            "current_page": int(request.query_params.get("page", 1)),
+            "page_size": int(request.query_params.get("size", 10)),
+        }
+
+        try:
+            response = use_case.execute(ListUsers.ListUsersRequest(**request_data))
+        except InvalidOrderBy as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Serializa os usuários
+        users_serializer = UserResponseSerializer(response.data, many=True)
+        # Serializa meta e links manualmente
+        meta = {
+            "total_users": response.meta.total_users,
+            "current_page": response.meta.current_page,
+            "page_size": response.meta.page_size,
+            "query_params": response.meta.query_params,
+        }
+        return Response(
+            {
+                "data": users_serializer.data,
+                "meta": meta,
+                "links": response.links,
+            },
+            status=status.HTTP_200_OK,
         )

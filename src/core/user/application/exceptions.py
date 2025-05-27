@@ -4,3 +4,6 @@ class InvalidUser(Exception):
 
 class UserAlreadyExists(Exception):
     pass
+
+class InvalidOrderBy(Exception):
+    pass

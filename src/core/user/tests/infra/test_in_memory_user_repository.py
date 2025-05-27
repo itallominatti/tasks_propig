@@ -17,3 +17,5 @@ class TestInMemoryUserRepository:
 
         assert len(repository.users) == 1
         assert repository.users[0] == user
+
+    

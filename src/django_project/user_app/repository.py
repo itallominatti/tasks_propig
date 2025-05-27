@@ -24,6 +24,12 @@ class DjangoORMUserRepository(UserRepositoryInterface):
         except self.user_model.DoesNotExist:
             return None
         
+    def list(self) -> list[User]:
+        return [
+            UserModelMapper.to_entity(user_model=user_model)
+            for user_model in self.user_model.objects.all()
+        ]
+        
 class UserModelMapper:
     @staticmethod
     def to_model(user: User) -> DjangoUserModel:
