@@ -26,11 +26,17 @@ class UserViewSet(viewsets.ViewSet):
             repository=DjangoORMUserRepository(),
             password_hasher=BcryptPasswordHasher(),
         )
-        response = use_case.execute(
-            request=CreateUser.CreateUserRequest(
-                **serializer.validated_data
+        try:
+            response = use_case.execute(
+                request=CreateUser.CreateUserRequest(
+                    **serializer.validated_data
+                )
             )
-        )
+        except (UserAlreadyExists, InvalidUser) as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         response_serializer = UserResponseSerializer(response)
         return Response(

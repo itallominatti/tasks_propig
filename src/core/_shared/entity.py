@@ -19,6 +19,5 @@ class Entity(ABC):
         return self.id == value.id
 
     @abstractmethod
-    def validate(self) -> None:
-        """Validate the entity. Should be implemented by subclasses."""
-        pass
+    def validate(self):
+        raise NotImplementedError("You must implement the validate method")
