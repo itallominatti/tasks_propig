@@ -3,9 +3,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 
-from src.adapters.hash.bcrypt_adapter import BcryptAdapter
+from src.adapters.hash.bcrypt_adapter import BcryptPasswordHasher
 
-from src.core.user.application.exceptions import UserAlreadyExists, UserNotFound
+from src.core.user.application.exceptions import UserAlreadyExists, InvalidUser
 from src.core.user.application.use_cases.create_user import CreateUser
 
 from src.django_project.user_app.repository import DjangoORMUserRepository
@@ -24,7 +24,7 @@ class UserViewSet(viewsets.ViewSet):
 
         use_case = CreateUser(
             repository=DjangoORMUserRepository(),
-            password_hasher=BcryptAdapter(),
+            password_hasher=BcryptPasswordHasher(),
         )
         response = use_case.execute(
             request=CreateUser.CreateUserRequest(

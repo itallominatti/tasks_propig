@@ -8,7 +8,7 @@ from src.django_project.user_app.models import User as DjangoUserModel
 class DjangoORMUserRepository(UserRepositoryInterface):
     """Django ORM implementation of the UserRepositoryInterface."""
 
-    def __init__(self, user_model: DjangoUserModel) -> None:
+    def __init__(self, user_model: DjangoUserModel = DjangoUserModel) -> None:
         self.user_model = user_model
 
     def save(self, user: User) -> User:
@@ -16,10 +16,10 @@ class DjangoORMUserRepository(UserRepositoryInterface):
         user_orm = UserModelMapper.to_model(user)
         user_orm.save()
 
-    def get_by_name(self, username: str) -> User | None:
-        """Get a user by username."""
+    def get_by_email(self, email: str) -> User | None:
+        """Get a user by email."""
         try:
-            user_model = self.user_model.objects.get(username=username)
+            user_model = self.user_model.objects.get(email=email)
             return UserModelMapper.to_entity(user_model)
         except self.user_model.DoesNotExist:
             return None
