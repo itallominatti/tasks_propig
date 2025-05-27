@@ -33,11 +33,12 @@ class DjangoORMUserRepository(UserRepositoryInterface):
             return None
 
         
-    def list(self) -> list[User]:
-        return [
-            UserModelMapper.to_entity(user_model=user_model)
-            for user_model in self.user_model.objects.all()
-        ]
+    def list(self, user_id: UUID = None) -> list[User]:
+        queryset = self.user_model.objects.all()
+        if user_id is not None:
+            queryset = queryset.filter(id=user_id)
+        return [UserModelMapper.to_entity(user_model) for user_model in queryset]
+
     
     def get_user_by_id(self, user_id: UUID) -> User | None:
         """Get a user by their unique identifier."""

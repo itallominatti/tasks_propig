@@ -43,9 +43,9 @@ def test_delete_task(repo, task):
     repo.delete(task.id)
     assert repo.get_by_id(task.id) is None
 
-def test_list_tasks(repo, task):
+def test_list_tasks(repo, task, user_id):
     repo.save(task)
-    tasks = repo.list()
+    tasks = repo.list(user_id)
     assert len(tasks) == 1
     assert tasks[0].title == "Test Task"
 
@@ -63,12 +63,12 @@ def test_user_can_only_see_own_tasks(repo, user_id, another_user_id):
     repo.save(task1)
     repo.save(task2)
 
-    visible_tasks = [t for t in repo.list() if user_id in t.users]
+    visible_tasks = repo.list(user_id)
     assert len(visible_tasks) == 1
     assert visible_tasks[0].title == "User Task"
 
     # Simula "listar tasks visíveis para another_user_id"
-    visible_tasks_other = [t for t in repo.list() if another_user_id in t.users]
+    visible_tasks_other = repo.list(another_user_id)
     assert len(visible_tasks_other) == 1
     assert visible_tasks_other[0].title == "Other User Task"
 
@@ -79,5 +79,5 @@ def test_user_cannot_see_task_if_not_in_users(repo, user_id, another_user_id):
         users={another_user_id}
     )
     repo.save(task)
-    visible_tasks = [t for t in repo.list() if user_id in t.users]
+    visible_tasks = repo.list(user_id)
     assert len(visible_tasks) == 0

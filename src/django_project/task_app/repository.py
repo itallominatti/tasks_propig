@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from src.core.tasks.domain.tasks import Task
 from src.core.tasks.domain.task_repository_interface import TaskRepositoryInterface
 
@@ -51,11 +53,11 @@ class DjangoOrmTaskRepository(TaskRepositoryInterface):
             task_model.save()
             return TaskModelMapper.to_entity(task_model)
 
-    def list(self) -> list[Task]:
-        return [
-            TaskModelMapper.to_entity(task_model=task_model)
-            for task_model in self.task_model.objects.all()
-        ]
+    def list(self, user_id: UUID = None):
+        queryset = self.task_model.objects.all()
+        if user_id is not None:
+            queryset = queryset.filter(users__id=user_id)
+        return [TaskModelMapper.to_entity(task_model) for task_model in queryset]
 
 
 class TaskModelMapper:

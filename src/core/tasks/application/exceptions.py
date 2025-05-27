@@ -3,3 +3,6 @@ class RelatedUserNotFound(Exception):
 
 class InvalidTaskData(Exception):
     pass
+
+class InvalidTaskBy(Exception):
+    pass

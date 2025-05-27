@@ -29,6 +29,8 @@ class InMemoryTaskRepository(TaskRepositoryInterface):
                 self.tasks[i] = task
                 break
 
-    def list(self) -> List[Task]:
-        """List all tasks."""
-        return [task for task in self.tasks]
+    def list(self, user_id: UUID) -> List[Task]:
+        """List all tasks for a specific user."""
+        if user_id is None:
+            return list(self.tasks)
+        return [task for task in self.tasks if user_id in task.users]

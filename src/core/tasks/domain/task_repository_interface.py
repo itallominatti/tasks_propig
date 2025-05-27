@@ -26,6 +26,6 @@ class TaskRepositoryInterface(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    def list(self) -> list[Task]:
+    def list(self, user_id: UUID) -> list[Task]:
         """List all tasks."""
         raise NotImplementedError

@@ -10,8 +10,10 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 
 
 from src.core.tasks.application.use_cases.create_task import CreateTask
-from src.core.tasks.application.exceptions import InvalidTaskData, RelatedUserNotFound
-from src.django_project.task_app.serializers import CreateTaskRequestSerializer, CreateTaskResponseSerializer
+from src.core.tasks.application.exceptions import InvalidTaskData, RelatedUserNotFound, InvalidTaskBy
+from src.django_project.task_app.serializers import CreateTaskRequestSerializer, CreateTaskResponseSerializer, TaskListResponseSerializer
+
+from src.core.tasks.application.use_cases.list_task import ListTask
 
 from src.django_project.task_app.repository import DjangoOrmTaskRepository
 from src.django_project.user_app.repository import DjangoORMUserRepository
@@ -26,12 +28,31 @@ class TaskViewSet(viewsets.ViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    
     def list(self, request):
-        """
-        List all tasks.
-        """
-        # Logic to retrieve and return all tasks
-        pass
+        order_by = request.query_params.get('order_by', 'title')
+        page = int(request.query_params.get('page', 1))
+        size = int(request.query_params.get('size', 10))
+
+        use_case = ListTask(
+            repository=DjangoOrmTaskRepository(),
+        )
+        request_uc = ListTask.ListTaskRequest(
+            order_by=order_by,
+            page=page,
+            size=size,
+            user_id=str(request.user.id)
+        )
+        try:
+            response = use_case.execute(request=request_uc)
+        except (InvalidTaskData, RelatedUserNotFound) as err:
+            return Response(
+                {"error": str(err)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer = TaskListResponseSerializer(instance=response)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
 
     def create(self, request: Request) -> Response:
         serializer = CreateTaskRequestSerializer(data=request.data)

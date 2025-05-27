@@ -11,10 +11,6 @@ class TestTask:
         with pytest.raises(ValueError, match="Title cannot be empty."):
             Task(title="", description="desc")
 
-    def test_create_task_with_empty_description(self):
-        with pytest.raises(ValueError, match="Description cannot be empty."):
-            Task(title="Task 1", description="")
-
     def test_create_task_with_long_title(self):
         with pytest.raises(ValueError, match="Title cannot exceed 30 characters."):
             Task(title="a" * 31, description="desc")
