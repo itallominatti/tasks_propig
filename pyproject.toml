@@ -1,26 +1,25 @@
-[project]
+[tool.poetry]
 name = "tasks-propig"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "itallo.minatti",email = "itallominatti@gmail.com"}
-]
+authors = ["itallo.minatti <itallominatti@gmail.com>"]
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "pytest (>=8.3.5,<9.0.0)",
-    "bcrypt (>=4.3.0,<5.0.0)",
-    "django (>=5.2.1,<6.0.0)",
-    "psycopg2-binary (>=2.9.10,<3.0.0)",
-    "djangorestframework (>=3.16.0,<4.0.0)",
-    "drf-yasg (>=1.21.10,<2.0.0)",
-    "pytest-django (>=4.11.1,<5.0.0)",
-    "pyjwt (>=2.10.1,<3.0.0)"
+packages = [
+    { include = "core", from = "src" },
+    { include = "adapters", from = "src" },
+    { include = "django_project", from = "src" },
 ]
 
-[tool.poetry]
-packages = [{include = "tasks_propig", from = "src"}]
-
+[tool.poetry.dependencies]
+python = ">=3.12"
+pytest = ">=8.3.5,<9.0.0"
+bcrypt = ">=4.3.0,<5.0.0"
+django = ">=5.2.1,<6.0.0"
+psycopg2-binary = ">=2.9.10,<3.0.0"
+djangorestframework = ">=3.16.0,<4.0.0"
+drf-yasg = ">=1.21.10,<2.0.0"
+pytest-django = ">=4.11.1,<5.0.0"
+pyjwt = ">=2.10.1,<3.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
