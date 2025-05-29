@@ -39,3 +39,27 @@ Thumbs.db
 # Poetry/Pipenv lock files
 poetry.lock
 Pipfile.lock
+
+# Elasticsearch & Kibana data and logs
+elasticsearch/
+elasticsearch_data/
+elasticsearch-data/
+elasticsearch-logs/
+es-data/
+es-logs/
+*.es_tmp/
+*.es_backup/
+.doc/
+.fdm/
+.si/
+nodes/
+logs/
+data/
+kibana/
+kibana-data/
+kibana_logs/
+kibana-data/
+kibana-logs/
+kibana_logs/
+kibana-logs/
+kibana_tmp/

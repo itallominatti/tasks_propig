@@ -20,13 +20,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    'drf_yasg',
+    "drf_yasg",
     "src.django_project.user_app",
     "src.django_project.auth_app",
     "src.django_project.task_app",
+    "elasticapm.contrib.django",
 ]
 
 MIDDLEWARE = [
+    "elasticapm.contrib.django.middleware.TracingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -35,6 +37,13 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+ELASTIC_APM = {
+    'SERVICE_NAME': 'django_project',
+
+    "SERVER_URL": "http://host.docker.internal:8200",
+    "DEBUG": True,
+}
 
 ROOT_URLCONF = "django_project.urls"
 
@@ -48,6 +57,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "elasticapm.contrib.django.context_processors.run_tracing",
             ],
         },
     },

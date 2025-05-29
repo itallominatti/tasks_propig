@@ -9,6 +9,7 @@ Tasks Propig é uma API RESTful desenvolvida em Python utilizando Django e Djang
 - [Visão Geral](#visão-geral)
 - [System Design e Arquitetura](#system-design-e-arquitetura)
 - [Como baixar e rodar o projeto](#como-baixar-e-rodar-o-projeto)
+- [Acessando o ElasticSearch](#acessando-o-elasticsearch)
 - [Principais Endpoints](#principais-endpoints)
 - [Exemplos de uso com cURL](#exemplos-de-uso-com-curl)
 - [Rodando os testes](#rodando-os-testes)
@@ -36,25 +37,25 @@ Tasks Propig oferece endpoints para cadastro, autenticação e gerenciamento de 
 ## System Design e Arquitetura
 
 - **Arquitetura em Camadas & DDD:**  
-    O projeto é dividido em camadas, separando regras de negócio, infraestrutura e apresentação. Utiliza Domain-Driven Design para organizar entidades, casos de uso e repositórios.
-    - `core/`: Entidades de domínio, interfaces de repositório e casos de uso.
-    - `adapters/`: Implementações para hash de senha, JWT e integrações externas.
-    - `django_project/`: Apps Django para REST API, autenticação, usuários e tasks.
+  O projeto é dividido em camadas, separando regras de negócio, infraestrutura e apresentação. Utiliza Domain-Driven Design para organizar entidades, casos de uso e repositórios.
+  - `core/`: Entidades de domínio, interfaces de repositório e casos de uso.
+  - `adapters/`: Implementações para hash de senha, JWT e integrações externas.
+  - `django_project/`: Apps Django para REST API, autenticação, usuários e tasks.
 
 - **Autenticação JWT:**  
-    Usuários autenticam via `/auth/login/` e recebem um token JWT, necessário para acessar endpoints protegidos.
+  Usuários autenticam via `/auth/login/` e recebem um token JWT, necessário para acessar endpoints protegidos.
 
 - **Isolamento de Domínios:**  
-    Usuário e Task são domínios independentes. Tasks referenciam o usuário dono, mas não há acoplamento direto reverso.
+  Usuário e Task são domínios independentes. Tasks referenciam o usuário dono, mas não há acoplamento direto reverso.
 
 - **Testes Automatizados:**  
-    Utiliza `pytest` e `APITestCase` para garantir a qualidade dos endpoints e regras de negócio.
+  Utiliza `pytest` e `APITestCase` para garantir a qualidade dos endpoints e regras de negócio.
 
 - **Documentação Automática:**  
-    Swagger disponível em `/swagger/` para explorar e testar a API.
+  Swagger disponível em `/swagger/` para explorar e testar a API.
 
 - **HATEOAS:**  
-    Os endpoints seguem o princípio HATEOAS (Hypermedia as the Engine of Application State), fornecendo links de navegação nas respostas para facilitar a descoberta e interação com os recursos da API.
+  Os endpoints seguem o princípio HATEOAS (Hypermedia as the Engine of Application State), fornecendo links de navegação nas respostas para facilitar a descoberta e interação com os recursos da API.
 
 ---
 
@@ -67,30 +68,56 @@ Tasks Propig oferece endpoints para cadastro, autenticação e gerenciamento de 
 ### Passos para rodar com Docker
 
 1. **Configure as variáveis de ambiente:**
-    - Copie o arquivo de exemplo:
-        ```sh
-        cp .env-example .env
-        ```
-    - Edite `.env` conforme necessário (credenciais do banco, secret key, etc).
+  - Copie o arquivo de exemplo:
+    ```sh
+    cp .env-example .env
+    ```
+  - Edite `.env` conforme necessário (credenciais do banco, secret key, etc).
 
 2. **Suba a aplicação e o banco de dados com Docker Compose:**
-    ```sh
-    docker compose up --build
-    ```
+  ```sh
+  docker compose up --build
+  ```
 
 3. **Acesse a aplicação:**
-    - O backend estará disponível em [http://localhost:8000/](http://localhost:8000/)
-    - A documentação Swagger estará em [http://localhost:8000/swagger/](http://localhost:8000/swagger/)
+  - O backend estará disponível em [http://localhost:8000/](http://localhost:8000/)
+  - A documentação Swagger estará em [http://localhost:8000/swagger/](http://localhost:8000/swagger/)
 
 4. **(Opcional) Executar comandos no container:**
-    - Para rodar migrações manualmente:
-        ```sh
-        docker compose exec web poetry run python manage.py migrate
-        ```
-    - Para criar um superusuário:
-        ```sh
-        docker compose exec web poetry run python manage.py createsuperuser
-        ```
+  - Para rodar migrações manualmente:
+    ```sh
+    docker compose exec web poetry run python manage.py migrate
+    ```
+  - Para criar um superusuário:
+    ```sh
+    docker compose exec web poetry run python manage.py createsuperuser
+    ```
+
+---
+
+## Acessando o ElasticSearch
+
+O projeto inclui um serviço ElasticSearch para indexação e busca de dados.
+
+- **Host:** [http://localhost:9200/](http://localhost:9200/)
+- **Usuário padrão:** `elastic`
+- **Senha padrão:** `changeme` (ou conforme definido no seu `.env` ou `docker-compose.yml`)
+
+### Como acessar o ElasticSearch
+
+1. **Via navegador:**  
+   Acesse [http://localhost:9200/](http://localhost:9200/) para verificar se o serviço está rodando.
+
+2. **Via cURL:**  
+   ```sh
+   curl -u elastic:changeme http://localhost:9200/
+   ```
+
+3. **Via Kibana (se disponível):**  
+   Caso o serviço Kibana esteja configurado no seu `docker-compose.yml`, acesse [http://localhost:5601/](http://localhost:5601/) para uma interface web de gerenciamento.
+
+> **Importante:**  
+> Altere a senha padrão do ElasticSearch em ambientes de produção.
 
 ---
 
